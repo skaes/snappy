@@ -140,6 +140,17 @@ configure_file(
   "${PROJECT_BINARY_DIR}/config.h"
 )
 
+set(PKG_CONFIG_REQUIRES "")
+set(PKG_CONFIG_LIBDIR "\${prefix}/lib")
+set(PKG_CONFIG_INCLUDEDIR "\${prefix}/include")
+set(PKG_CONFIG_LIBS "-L\${libdir} -lsnappy")
+set(PKG_CONFIG_CFLAGS "-I\${includedir}")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config.pc.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/libsnappy.pc"
+)
+
 # We don't want to define HAVE_ macros in public headers. Instead, we use
 # CMake's variable substitution with 0/1 variables, which will be seen by the
 # preprocessor as constants.
@@ -293,5 +304,9 @@ if(SNAPPY_INSTALL)
       "${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake"
       "${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+  )
+  install(
+      FILES "${CMAKE_BINARY_DIR}/libsnappy.pc"
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
   )
 endif(SNAPPY_INSTALL)
